@@ -40,6 +40,11 @@ func floatPtr(f float64) *float64 {
 	return &f
 }
 
+func componentPtr(id string) *cyclonedx.Component {
+	c := results.CreateScaComponentFromXrayCompId(id)
+	return &c
+}
+
 var testPackagesData = []struct {
 	packageType string
 	commandName string
@@ -120,7 +125,7 @@ func TestScanRepositoryCmd_Run(t *testing.T) {
 		{
 			testName:                       "aggregate-multi-project",
 			expectedPackagesInBranch:       map[string][]string{"frogbot-update-68d9dee2475e5986e783d85dfa11baa0-dependencies-master": {"uuid", "minimatch", "mpath"}, "frogbot-update-e8fa179873704bb1362147aff9c40040-dependencies-master": {"pyjwt", "pexpect"}},
-			expectedVersionUpdatesInBranch: map[string][]string{"frogbot-update-68d9dee2475e5986e783d85dfa11baa0-dependencies-master": {"^9.0.0", "^0.8.4", "^10.2.3"}, "frogbot-update-e8fa179873704bb1362147aff9c40040-dependencies-master": {"2.12.0"}},
+			expectedVersionUpdatesInBranch: map[string][]string{"frogbot-update-68d9dee2475e5986e783d85dfa11baa0-dependencies-master": {"^9.0.0", "^0.8.4", "^10.2.3"}, "frogbot-update-e8fa179873704bb1362147aff9c40040-dependencies-master": {"2.13.0"}},
 			expectedMissingFilesInBranch:   map[string][]string{"frogbot-update-68d9dee2475e5986e783d85dfa11baa0-dependencies-master": {"npm/package-lock.json"}},
 			packageDescriptorPaths:         []string{"npm/package.json", "pip/requirements.txt"},
 			aggregateFixes:                 true,
@@ -571,7 +576,7 @@ func TestCreateVulnerabilitiesMap(t *testing.T) {
 									Severity:      severityutils.Critical,
 									Watch:         "w1",
 								},
-								ImpactedComponent: results.CreateScaComponentFromXrayCompId("viol1"),
+								ImpactedComponent: componentPtr("viol1"),
 								DirectComponents:  []formats.ComponentRow{{Name: "viol1", Version: "1.0.0"}},
 								ImpactPaths:       [][]formats.ComponentRow{{{Name: "root"}, {Name: "viol1", Version: "1.0.0"}}},
 							},
@@ -598,7 +603,7 @@ func TestCreateVulnerabilitiesMap(t *testing.T) {
 									Severity:      severityutils.Critical,
 									Watch:         "w1",
 								},
-								ImpactedComponent: results.CreateScaComponentFromXrayCompId("viol1"),
+								ImpactedComponent: componentPtr("viol1"),
 								DirectComponents:  []formats.ComponentRow{{Name: "viol1", Version: "1.0.0"}},
 								ImpactPaths:       [][]formats.ComponentRow{{{Name: "root"}, {Name: "viol1", Version: "1.0.0"}}},
 							},
@@ -625,7 +630,7 @@ func TestCreateVulnerabilitiesMap(t *testing.T) {
 									Severity:      severityutils.High,
 									Watch:         "w1",
 								},
-								ImpactedComponent: results.CreateScaComponentFromXrayCompId("viol2"),
+								ImpactedComponent: componentPtr("viol2"),
 								DirectComponents:  []formats.ComponentRow{{Name: "viol2", Version: "2.0.0"}},
 								ImpactPaths:       [][]formats.ComponentRow{{{Name: "root"}, {Name: "viol1", Version: "1.0.0"}, {Name: "viol2", Version: "2.0.0"}}},
 							},
@@ -652,7 +657,7 @@ func TestCreateVulnerabilitiesMap(t *testing.T) {
 									Severity:      severityutils.High,
 									Watch:         "w1",
 								},
-								ImpactedComponent: results.CreateScaComponentFromXrayCompId("viol2"),
+								ImpactedComponent: componentPtr("viol2"),
 								DirectComponents:  []formats.ComponentRow{{Name: "viol2", Version: "2.0.0"}},
 								ImpactPaths:       [][]formats.ComponentRow{{{Name: "root"}, {Name: "viol1", Version: "1.0.0"}, {Name: "viol2", Version: "2.0.0"}}},
 							},
